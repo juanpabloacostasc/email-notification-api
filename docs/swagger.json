@@ -1,0 +1,70 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Notification Service API",
+    "description": "API for sending notifications",
+    "version": "1.0.0"
+  },
+  "host": "localhost:8082",
+  "basePath": "/",
+  "paths": {
+    "/send": {
+      "post": {
+        "summary": "Send a notification",
+        "description": "Sends a notification to a user.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Notification object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Notification"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification sent successfully"
+          },
+          "400": {
+            "description": "Invalid request body"
+          },
+          "429": {
+            "description": "Too many requests"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Notification": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "The type of notification (e.g., 'status', 'news', 'marketing')."
+        },
+        "user_id": {
+          "type": "string",
+          "description": "The ID of the user to send the notification to."
+        },
+        "message": {
+          "type": "string",
+          "description": "The content of the notification."
+        }
+      },
+      "required": [
+        "type",
+        "user_id",
+        "message"
+      ]
+    }
+  }
+}

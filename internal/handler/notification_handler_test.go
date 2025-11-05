@@ -10,7 +10,7 @@ import (
 
 	"notification-service/internal/domain"
 	"notification-service/internal/handler"
-	"notification-service/internal/mocks"
+	mocks "notification-service/internal/mocks"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -19,14 +19,14 @@ func TestNotificationHandler_SendNotification(t *testing.T) {
 	tests := []struct {
 		name           string
 		requestBody    []byte
-		setupMocks     func(*mocks.MockNotificationService)
+		setupMocks     func(*mocks.NotificationService)
 		expectedStatus int
 		expectedBody   string
 	}{
 		{
 			name:        "success",
 			requestBody: marshal(domain.Notification{UserID: "user1", Type: "status", Message: "Hello"}),
-			setupMocks: func(service *mocks.MockNotificationService) {
+			setupMocks: func(service *mocks.NotificationService) {
 				service.On("Send", domain.Notification{UserID: "user1", Type: "status", Message: "Hello"}).Return(nil)
 			},
 			expectedStatus: http.StatusOK,
@@ -35,14 +35,14 @@ func TestNotificationHandler_SendNotification(t *testing.T) {
 		{
 			name:           "fail - invalid request body",
 			requestBody:    []byte(`{"invalid json"}`),
-			setupMocks:     func(service *mocks.MockNotificationService) {},
+			setupMocks:     func(service *mocks.NotificationService) {},
 			expectedStatus: http.StatusBadRequest,
 			expectedBody:   "Invalid request body\n",
 		},
 		{
 			name:        "fail - rate limit exceeded",
 			requestBody: marshal(domain.Notification{UserID: "user2", Type: "news", Message: "News update"}),
-			setupMocks: func(service *mocks.MockNotificationService) {
+			setupMocks: func(service *mocks.NotificationService) {
 				service.On("Send", domain.Notification{UserID: "user2", Type: "news", Message: "News update"}).Return(errors.New("rate limit exceeded"))
 			},
 			expectedStatus: http.StatusTooManyRequests,
@@ -52,7 +52,7 @@ func TestNotificationHandler_SendNotification(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockService := new(mocks.MockNotificationService)
+			mockService := mocks.NewNotificationService(t)
 			tt.setupMocks(mockService)
 
 			h := handler.NewNotificationHandler(mockService)

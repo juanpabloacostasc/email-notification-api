@@ -29,3 +29,7 @@ This is a Go-based REST API that simulates the processing of notifications from 
 -   **Status:** 2 per minute
 -   **News:** 1 per day
 -   **Marketing:** 3 per hour
+
+## Quick Demo
+[![Watch the video](https://img.youtube.com/vi/4ooXk44XNH0/hqdefault.jpg)](https://youtu.be/4ooXk44XNH0)
+

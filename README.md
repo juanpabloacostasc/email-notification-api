@@ -31,5 +31,6 @@ This is a Go-based REST API that simulates the processing of notifications from 
 -   **Marketing:** 3 per hour
 
 ## Quick Demo
+Short video demonstrating the functionality with the example of a marketing notification
 [![Watch the video](https://img.youtube.com/vi/4ooXk44XNH0/hqdefault.jpg)](https://youtu.be/4ooXk44XNH0)
 

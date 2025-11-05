@@ -1,4 +1,4 @@
-package repository
+package repository_test
 
 import (
 	"bytes"
@@ -7,6 +7,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"notification-service/internal/repository"
 )
 
 func TestNotificationRepository_Send(t *testing.T) {
@@ -42,7 +44,7 @@ func TestNotificationRepository_Send(t *testing.T) {
 			r, w, _ := os.Pipe()
 			os.Stdout = w
 
-			repo := NewNotificationRepository()
+			repo := repository.NewNotificationRepository()
 			repo.Send(tt.userID, tt.message)
 
 			w.Close()

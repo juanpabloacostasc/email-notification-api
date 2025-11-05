@@ -1,8 +1,9 @@
 package server
 
 import (
-	"time"
+	"log"
 
+	"notification-service/config"
 	"notification-service/internal/domain"
 	"notification-service/internal/handler"
 	"notification-service/internal/repository"
@@ -14,12 +15,12 @@ func buildNotificationHandler() *handler.NotificationHandler {
 }
 
 func buildNotificationService() *service.NotificationService {
-	rules := []domain.RateLimitRule{
-		{Type: "status", Limit: 2, Duration: time.Minute},
-		{Type: "news", Limit: 1, Duration: 24 * time.Hour},
-		{Type: "marketing", Limit: 3, Duration: time.Hour},
-		{Type: "project_invitations", Limit: 1, Duration: 24 * time.Hour},
+	cfg, err := config.LoadConfig("config/config.json")
+	if err != nil {
+		log.Fatalf("failed to load config: %v", err)
 	}
+
+	rules := cfg.ToDomainRateLimitRules()
 	return service.NewNotificationService(buildRateLimiter(rules), buildNotificationGateway())
 }
 

@@ -8,13 +8,13 @@ import (
 )
 
 type (
-	sentRecord struct {
-		timestamp time.Time
+	SentRecord struct {
+		Timestamp time.Time
 	}
 
 	RateLimiter struct {
 		mu      sync.Mutex
-		records map[string][]sentRecord
+		Records map[string][]SentRecord
 		Rules   map[string]domain.RateLimitRule
 	}
 )
@@ -25,7 +25,7 @@ func NewRateLimiter(rules []domain.RateLimitRule) *RateLimiter {
 		ruleMap[rule.Type] = rule
 	}
 	return &RateLimiter{
-		records: make(map[string][]sentRecord),
+		Records: make(map[string][]SentRecord),
 		Rules:   ruleMap,
 	}
 }
@@ -42,21 +42,21 @@ func (rl *RateLimiter) Allow(userID, notificationType string) bool {
 	now := time.Now()
 	key := userID + "_" + notificationType
 
-	records := rl.records[key]
+	records := rl.Records[key]
 	n := 0
 	for _, record := range records {
-		if now.Sub(record.timestamp) < rule.Duration {
+		if now.Sub(record.Timestamp) < rule.Duration {
 			records[n] = record
 			n++
 		}
 	}
-	rl.records[key] = records[:n]
+	rl.Records[key] = records[:n]
 
-	if len(rl.records[key]) >= rule.Limit {
+	if len(rl.Records[key]) >= rule.Limit {
 		return false
 	}
 
-	rl.records[key] = append(rl.records[key], sentRecord{timestamp: now})
+	rl.Records[key] = append(rl.Records[key], SentRecord{Timestamp: now})
 
 	return true
 }

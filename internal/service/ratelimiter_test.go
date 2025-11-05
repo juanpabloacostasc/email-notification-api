@@ -1,10 +1,11 @@
-package service
+package service_test
 
 import (
 	"testing"
 	"time"
 
 	"notification-service/internal/domain"
+	"notification-service/internal/service"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -16,7 +17,7 @@ func TestRateLimiter_Allow(t *testing.T) {
 		{Type: "marketing", Limit: 3, Duration: time.Hour},
 	}
 
-	rateLimiter := NewRateLimiter(rules)
+	rateLimiter := service.NewRateLimiter(rules)
 
 	tests := []struct {
 		name             string
@@ -53,9 +54,9 @@ func TestRateLimiter_Allow(t *testing.T) {
 			notificationType: "status",
 			setup: func() {
 				key := "user4_status"
-				rateLimiter.records[key] = []sentRecord{
-					{timestamp: time.Now().Add(-2 * time.Minute)},
-					{timestamp: time.Now().Add(-2 * time.Minute)},
+				rateLimiter.Records[key] = []service.SentRecord{
+					{Timestamp: time.Now().Add(-2 * time.Minute)},
+					{Timestamp: time.Now().Add(-2 * time.Minute)},
 				}
 			},
 			expectedResult: true,

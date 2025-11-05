@@ -1,4 +1,4 @@
-package service
+package service_test
 
 import (
 	"errors"
@@ -6,6 +6,7 @@ import (
 
 	"notification-service/internal/domain"
 	"notification-service/internal/mocks"
+	"notification-service/internal/service"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -51,7 +52,7 @@ func TestNotificationService_Send(t *testing.T) {
 
 			tt.setupMocks(rateLimiterMock, notificationRepoMock)
 
-			service := NewNotificationService(rateLimiterMock, notificationRepoMock)
+			service := service.NewNotificationService(rateLimiterMock, notificationRepoMock)
 
 			err := service.Send(tt.notification)
 
